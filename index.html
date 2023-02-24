@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <title>QR</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background: #f2f2f2;
+      }
+      .contenedor {
+        max-width: 90%;
+        width: 500px;
+        margin: 80px auto;
+        height: 600px;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="contenedor" id="contenedor"></div>
+
+    <script>
+      $("document").ready(function () {
+        fetch("/whatsapp")
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            var id_qr = data.id;
+            var nombre_qr = data.codigo_rq;
+            const psplit = nombre_qr.split("");
+            let codigoQR = "";
+
+            for (let i = 0; i <= psplit.length; i++) {
+              switch (psplit[i]) {
+                case "@":
+                  psplit[i] = "%40";
+                  break;
+                case "=":
+                  psplit[i] = "%3D";
+                  break;
+                case ",":
+                  psplit[i] = "%2C";
+                  break;
+                case "+":
+                  psplit[i] = "%2B";
+                  break;
+              }
+            }
+            codigoQR = psplit.join("");
+
+            document.getElementById("contenedor").innerHTML = `
+                    <iframe src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&choe=UTF-8&chl=${codigoQR}" id="qr" frameborder="0"></iframe>`;
+          });
+        setInterval(() => {
+          console.log("cada 10 sec");
+          fetch("/whatsapp")
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            var id_qr = data.id;
+            var nombre_qr = data.codigo_rq;
+            const psplit = nombre_qr.split("");
+            let codigoQR = "";
+
+            for (let i = 0; i <= psplit.length; i++) {
+              switch (psplit[i]) {
+                case "@":
+                  psplit[i] = "%40";
+                  break;
+                case "=":
+                  psplit[i] = "%3D";
+                  break;
+                case ",":
+                  psplit[i] = "%2C";
+                  break;
+                case "+":
+                  psplit[i] = "%2B";
+                  break;
+              }
+            }
+            codigoQR = psplit.join("");
+
+            document.getElementById("contenedor").innerHTML = `
+                    <iframe src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&choe=UTF-8&chl=${codigoQR}" id="qr" frameborder="0"></iframe>`;
+          });
+        }, 10000);
+      });
+    </script>
+  </body>
+</html>
